@@ -105,7 +105,7 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
       _error = null;
     });
     try {
-      final response = await Supabase.instance.client.auth.verifyOTP(
+      await Supabase.instance.client.auth.verifyOTP(
         phone: _phone,
         token: _codeController.text.trim(),
         type: OtpType.sms,
