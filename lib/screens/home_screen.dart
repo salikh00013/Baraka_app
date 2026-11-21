@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'catalog_screen.dart';
+import 'admin_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -24,6 +25,13 @@ class HomeScreen extends StatelessWidget {
           style: TextStyle(fontWeight: FontWeight.w800, letterSpacing: 1.2),
         ),
         actions: [
+          IconButton(
+            tooltip: 'Admin bo‘limi (vaqtinchalik test)',
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const AdminScreen()),
+            ),
+            icon: const Icon(Icons.admin_panel_settings_outlined),
+          ),
           IconButton(
             tooltip: 'Savatcha',
             onPressed: () {},
