@@ -19,7 +19,7 @@ jobs:
           cache: true
 
       - name: Generate Android project files
-        run: flutter create --platforms=android --project-name baraka .
+        run: flutter create --platforms=android --project-name baraka --org uz.baraka .
 
       - name: Remove generated placeholder test
         run: rm -f test/widget_test.dart
@@ -35,8 +35,8 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
-          flutter build apk --release \
-            --dart-define=SUPABASE_URL="$SUPABASE_URL" \
+          flutter build apk --release \\
+            --dart-define=SUPABASE_URL="$SUPABASE_URL" \\
             --dart-define=SUPABASE_ANON_KEY="$SUPABASE_ANON_KEY"
 
       - name: Upload APK
