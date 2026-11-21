@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
+import 'catalog_screen.dart';
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   static const categories = <({String name, IconData icon})>[
     (name: 'Oziq-ovqat', icon: Icons.shopping_basket_outlined),
     (name: 'Sabzavotlar', icon: Icons.eco_outlined),
-    (name: 'Mevalar', icon: Icons.apple_outlined),
+    (name: 'Mevalar', icon: Icons.local_grocery_store_outlined),
     (name: 'Go‘sht va sut', icon: Icons.egg_alt_outlined),
     (name: 'Ichimliklar', icon: Icons.local_drink_outlined),
     (name: 'Uy-ro‘zg‘or', icon: Icons.home_outlined),
@@ -77,19 +79,27 @@ class HomeScreen extends StatelessWidget {
               final category = categories[index];
               return Card(
                 elevation: 0,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Row(
-                    children: [
-                      Icon(category.icon, color: const Color(0xFF16834A)),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          category.name,
-                          style: const TextStyle(fontWeight: FontWeight.w600),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(12),
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => CatalogScreen(category: category.name),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Row(
+                      children: [
+                        Icon(category.icon, color: const Color(0xFF16834A)),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            category.name,
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -98,7 +108,7 @@ class HomeScreen extends StatelessWidget {
           const SizedBox(height: 20),
           const Center(
             child: Text(
-              'Mahsulotlar katalogi tez orada ulanadi',
+              'Kategoriyani tanlang — mahsulotlar ro‘yxatini ko‘ring',
               style: TextStyle(color: Colors.black54),
             ),
           ),
