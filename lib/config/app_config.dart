@@ -3,10 +3,12 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class AppConfig {
   AppConfig._();
 
-  // Configure with the Supabase project URL and anon/publishable key.
-  // Never put a service-role key in this mobile application.
-  static const String supabaseUrl = '';
-  static const String supabaseAnonKey = '';
+  // Values are injected by GitHub Actions at build time.
+  // Never place a service-role/secret key in the mobile app.
+  static const String supabaseUrl =
+      String.fromEnvironment('SUPABASE_URL');
+  static const String supabaseAnonKey =
+      String.fromEnvironment('SUPABASE_ANON_KEY');
 
   static bool get isSupabaseConfigured =>
       supabaseUrl.isNotEmpty && supabaseAnonKey.isNotEmpty;
