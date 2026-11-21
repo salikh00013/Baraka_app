@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'config/app_config.dart';
-import 'screens/home_screen.dart';
+import 'screens/auth_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +28,26 @@ class BarakaApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: const Color(0xFFF7F8F6),
       ),
-      home: const HomeScreen(),
+      home: AppConfig.isSupabaseConfigured
+          ? const AuthGate()
+          : const _SupabaseSetupScreen(),
     );
   }
+}
+
+class _SupabaseSetupScreen extends StatelessWidget {
+  const _SupabaseSetupScreen();
+
+  @override
+  Widget build(BuildContext context) => const Scaffold(
+        body: Center(
+          child: Padding(
+            padding: EdgeInsets.all(24),
+            child: Text(
+              'BARAKA server sozlamalari hali ulanmagan. Supabase URL va publishable/anon key GitHub Actions secrets ichida sozlanishi kerak.',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      );
 }
