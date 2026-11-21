@@ -110,7 +110,7 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
         token: _codeController.text.trim(),
         type: OtpType.sms,
       );
-      await response.user?.updateUser(
+      await Supabase.instance.client.auth.updateUser(
         UserAttributes(data: {'requested_role': _selectedRole}),
       );
       if (!mounted) return;
