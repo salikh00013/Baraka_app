@@ -33,7 +33,7 @@ const initialCatalog = <CatalogProduct>[
   CatalogProduct(id: 'v005', name: 'Pomidor', category: 'Sabzavotlar', unit: ProductUnit.kg),
   CatalogProduct(id: 'v006', name: 'Bodring', category: 'Sabzavotlar', unit: ProductUnit.kg),
   CatalogProduct(id: 'v007', name: 'Sarimsoq', category: 'Sabzavotlar', unit: ProductUnit.kg),
-  CatalogProduct(id: 'v008', name: 'Bulғor qalampiri', category: 'Sabzavotlar', unit: ProductUnit.kg),
+  CatalogProduct(id: 'v008', name: 'Bulgor qalampiri', category: 'Sabzavotlar', unit: ProductUnit.kg),
   CatalogProduct(id: 'v009', name: 'Baqlajon', category: 'Sabzavotlar', unit: ProductUnit.kg),
   CatalogProduct(id: 'v010', name: 'Ko‘katlar', category: 'Sabzavotlar', unit: ProductUnit.boglam),
 
@@ -67,7 +67,7 @@ const initialCatalog = <CatalogProduct>[
   // Maishiy kimyo
   CatalogProduct(id: 'h001', name: 'Kir yuvish kukuni', category: 'Maishiy kimyo', unit: ProductUnit.kg),
   CatalogProduct(id: 'h002', name: 'Idish yuvish vositasi', category: 'Maishiy kimyo', unit: ProductUnit.dona),
-  CatalogProduct(id: 'h003', name: ' Oqartirgich', category: 'Maishiy kimyo', unit: ProductUnit.litr),
+  CatalogProduct(id: 'h003', name: 'Oqartirgich', category: 'Maishiy kimyo', unit: ProductUnit.litr),
   CatalogProduct(id: 'h004', name: 'Pol yuvish vositasi', category: 'Maishiy kimyo', unit: ProductUnit.litr),
   CatalogProduct(id: 'h005', name: 'Sovun', category: 'Maishiy kimyo', unit: ProductUnit.dona),
   CatalogProduct(id: 'h006', name: 'Shampun', category: 'Maishiy kimyo', unit: ProductUnit.dona),
