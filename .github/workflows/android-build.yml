@@ -21,6 +21,9 @@ jobs:
       - name: Generate Android project files
         run: flutter create --platforms=android --project-name baraka .
 
+      - name: Remove generated placeholder test
+        run: rm -f test/widget_test.dart
+
       - name: Install dependencies
         run: flutter pub get
 
