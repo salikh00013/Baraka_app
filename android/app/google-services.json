@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "128497462",
+    "project_id": "baraka-013",
+    "storage_bucket": "baraka-013.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:128497462:android:1852f2fcfad02fcddae597",
+        "android_client_info": {
+          "package_name": "Uz.baraka.baraka"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHrJg3ZYy3guLthLQ6gQx8n3vjA6Eddok"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
