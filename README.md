@@ -3,7 +3,7 @@
 BARAKA is a multi-store shopping and delivery platform launching in To‘raqo‘rg‘on, Namangan, Uzbekistan.
 
 ## Planned clients
-- Flutter app for Android and iOS
+- Flutter Android application
 - Web admin dashboard
 - Future customer web store
 
@@ -16,11 +16,22 @@ BARAKA is a multi-store shopping and delivery platform launching in To‘raqo‘
 
 ## Technology
 - Flutter mobile application
-- Supabase (PostgreSQL, Auth, Row Level Security, Storage)
-- Shared backend for mobile and web clients
+- Firebase Authentication for phone sign-in
+- Cloud Firestore for user, product, and order data
+- Firebase project: `baraka-013`
 
-## Development status
-Initial project setup. Supabase schema has been created separately. Supabase URL and anon key still need to be configured. Security policies require review before production.
+## Current implementation status
+- Firebase Android configuration is stored at `android/app/google-services.json`.
+- Phone authentication is being migrated from Supabase to Firebase Authentication.
+- User profiles are stored in the Firestore `users` collection.
+- Product and admin screens are still prototypes; product price/stock persistence, cart, checkout, and order workflows are not yet complete.
+- Firestore security rules are provided in `firestore.rules` and must be published in the Firebase Console before production use.
 
-## Security
-Never place a Supabase service-role key in a mobile app. Review Row Level Security and order/fulfillment permissions before launch.
+## Firebase Console setup required
+1. Enable **Authentication → Phone**.
+2. Create a **Cloud Firestore** database.
+3. Publish the rules from `firestore.rules`.
+4. Add the Android app SHA-1/SHA-256 fingerprints in Firebase project settings if required by the app-verification flow.
+5. Test with Firebase Authentication test phone numbers before sending real SMS.
+
+Never put service-account credentials or private server keys in the mobile app.
