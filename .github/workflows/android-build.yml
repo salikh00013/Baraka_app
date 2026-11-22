@@ -21,6 +21,35 @@ jobs:
       - name: Generate Android project files
         run: flutter create --platforms=android --project-name baraka --org uz.baraka .
 
+      - name: Configure Google Services Gradle plugin
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          candidates = [Path("android/app/build.gradle"), Path("android/app/build.gradle.kts")]
+          app_gradle = next((p for p in candidates if p.exists()), None)
+          if app_gradle is None:
+              raise SystemExit("Android app Gradle file was not generated")
+          content = app_gradle.read_text()
+          plugin = "com.google.gms.google-services"
+          if plugin not in content:
+              if 'id "com.android.application"' in content:
+                  content = content.replace(
+                      'id "com.android.application"',
+                      'id "com.android.application"\\n    id "com.google.gms.google-services" version "4.4.2"',
+                      1,
+                  )
+              elif 'id("com.android.application")' in content:
+                  content = content.replace(
+                      'id("com.android.application")',
+                      'id("com.android.application")\\n    id("com.google.gms.google-services") version "4.4.2"',
+                      1,
+                  )
+              else:
+                  raise SystemExit("Could not locate Android application plugin declaration")
+              app_gradle.write_text(content)
+          PY
+          test -f android/app/google-services.json
+
       - name: Remove generated placeholder test
         run: rm -f test/widget_test.dart
 
@@ -31,10 +60,7 @@ jobs:
         run: flutter analyze --no-fatal-infos
 
       - name: Build release APK
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-        run: flutter build apk --release --dart-define="SUPABASE_URL=$SUPABASE_URL" --dart-define="SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY"
+        run: flutter build apk --release
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
