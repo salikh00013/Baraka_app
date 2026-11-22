@@ -35,13 +35,13 @@ jobs:
               if 'id "com.android.application"' in content:
                   content = content.replace(
                       'id "com.android.application"',
-                      'id "com.android.application"\n    id "com.google.gms.google-services" version "4.4.2"',
+                      'id "com.android.application"\\n    id "com.google.gms.google-services" version "4.4.2"',
                       1,
                   )
               elif 'id("com.android.application")' in content:
                   content = content.replace(
                       'id("com.android.application")',
-                      'id("com.android.application")\n    id("com.google.gms.google-services") version "4.4.2"',
+                      'id("com.android.application")\\n    id("com.google.gms.google-services") version "4.4.2"',
                       1,
                   )
               else:
@@ -50,60 +50,6 @@ jobs:
           PY
           test -f android/app/google-services.json
 
-      - name: Configure release signing
-        env:
-          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-        run: |
-          set -euo pipefail
-          test -n "$ANDROID_KEYSTORE_BASE64"
-          test -n "$ANDROID_KEYSTORE_PASSWORD"
-          test -n "$ANDROID_KEY_PASSWORD"
-          test -n "$ANDROID_KEY_ALIAS"
-          {
-            echo "ANDROID_KEYSTORE_PASSWORD=$ANDROID_KEYSTORE_PASSWORD"
-            echo "ANDROID_KEY_PASSWORD=$ANDROID_KEY_PASSWORD"
-            echo "ANDROID_KEY_ALIAS=$ANDROID_KEY_ALIAS"
-          } >> "$GITHUB_ENV"
-          echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/baraka-release.jks
-          python3 - <<'PY'
-          import os
-          from pathlib import Path
-          candidates = [Path("android/app/build.gradle"), Path("android/app/build.gradle.kts")]
-          p = next((x for x in candidates if x.exists()), None)
-          if p is None:
-              raise SystemExit("Android app Gradle file not found")
-          s = p.read_text()
-          if p.suffix == ".kts":
-              signing = '''    signingConfigs {
-              create("barakaRelease") {
-                  keyAlias = System.getenv("ANDROID_KEY_ALIAS")
-                  keyPassword = System.getenv("ANDROID_KEY_PASSWORD")
-                  storeFile = file("baraka-release.jks")
-                  storePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
-              }
-          }
-          '''
-              anchor = "    buildTypes {"
-              if anchor not in s:
-                  raise SystemExit("Could not locate buildTypes in Kotlin Gradle file")
-              s = s.replace(anchor, signing + anchor, 1)
-              s = s.replace('signingConfig = signingConfigs.getByName("debug")', 'signingConfig = signingConfigs.getByName("barakaRelease")')
-              if 'signingConfig = signingConfigs.getByName("barakaRelease")' not in s:
-                  s = s.replace('getByName("release") {', 'getByName("release") {\n            signingConfig = signingConfigs.getByName("barakaRelease")', 1)
-          else:
-              signing = "    signingConfigs {\\n        release {\\n            keyAlias System.getenv(\\\"ANDROID_KEY_ALIAS\\\")\\n            keyPassword System.getenv(\\\"ANDROID_KEY_PASSWORD\\\")\\n            storeFile file(\\\"baraka-release.jks\\\")\\n            storePassword System.getenv(\\\"ANDROID_KEYSTORE_PASSWORD\\\")\\n        }\\n    }\\n"
-              anchor = "    buildTypes {"
-              if anchor not in s:
-                  raise SystemExit("Could not locate buildTypes in Groovy Gradle file")
-              s = s.replace(anchor, signing + anchor, 1)
-              s = s.replace("signingConfig signingConfigs.debug", "signingConfig signingConfigs.release")
-              if "signingConfig signingConfigs.release" not in s:
-                  s = s.replace("release {", "release {\n            signingConfig signingConfigs.release", 1)
-          p.write_text(s)
-          PY
       - name: Remove generated placeholder test
         run: rm -f test/widget_test.dart
 
@@ -113,12 +59,16 @@ jobs:
       - name: Analyze Flutter code
         run: flutter analyze --no-fatal-infos
 
-      - name: Build release APK
-        run: flutter build apk --release
+      - name: Build debug APK
+        run: flutter build apk --debug
+
+      - name: Show debug signing fingerprints
+        run: |
+          keytool -list -v -keystore "$HOME/.android/debug.keystore" -alias androiddebugkey -storepass android -keypass android | grep -E 'SHA1:|SHA256:'
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: baraka-release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: baraka-debug-apk
+          path: build/app/outputs/flutter-apk/app-debug.apk
           if-no-files-found: error
