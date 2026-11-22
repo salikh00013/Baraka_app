@@ -59,6 +59,14 @@ jobs:
         run: |
           set -euo pipefail
           test -n "$ANDROID_KEYSTORE_BASE64"
+          test -n "$ANDROID_KEYSTORE_PASSWORD"
+          test -n "$ANDROID_KEY_PASSWORD"
+          test -n "$ANDROID_KEY_ALIAS"
+          {
+            echo "ANDROID_KEYSTORE_PASSWORD=$ANDROID_KEYSTORE_PASSWORD"
+            echo "ANDROID_KEY_PASSWORD=$ANDROID_KEY_PASSWORD"
+            echo "ANDROID_KEY_ALIAS=$ANDROID_KEY_ALIAS"
+          } >> "$GITHUB_ENV"
           echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/baraka-release.jks
           python3 - <<'PY'
           import os
