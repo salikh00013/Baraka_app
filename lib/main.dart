@@ -5,11 +5,7 @@ import 'screens/auth_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  if (AppConfig.isSupabaseConfigured) {
-    await AppConfig.initializeSupabase();
-  }
-
+  await AppConfig.initializeFirebase();
   runApp(const BarakaApp());
 }
 
@@ -28,26 +24,7 @@ class BarakaApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: const Color(0xFFF7F8F6),
       ),
-      home: AppConfig.isSupabaseConfigured
-          ? const AuthGate()
-          : const _SupabaseSetupScreen(),
+      home: const AuthGate(),
     );
   }
-}
-
-class _SupabaseSetupScreen extends StatelessWidget {
-  const _SupabaseSetupScreen();
-
-  @override
-  Widget build(BuildContext context) => const Scaffold(
-        body: Center(
-          child: Padding(
-            padding: EdgeInsets.all(24),
-            child: Text(
-              'BARAKA server sozlamalari hali ulanmagan. Supabase URL va publishable/anon key GitHub Actions secrets ichida sozlanishi kerak.',
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
-      );
 }
