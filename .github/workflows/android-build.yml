@@ -86,15 +86,7 @@ jobs:
               if 'signingConfig = signingConfigs.getByName("barakaRelease")' not in s:
                   s = s.replace('getByName("release") {', 'getByName("release") {\n            signingConfig = signingConfigs.getByName("barakaRelease")', 1)
           else:
-              signing = '''    signingConfigs {
-          release {
-              keyAlias System.getenv("ANDROID_KEY_ALIAS")
-              keyPassword System.getenv("ANDROID_KEY_PASSWORD")
-              storeFile file("baraka-release.jks")
-              storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
-          }
-      }
-      '''
+              signing = "    signingConfigs {\\n        release {\\n            keyAlias System.getenv(\\\"ANDROID_KEY_ALIAS\\\")\\n            keyPassword System.getenv(\\\"ANDROID_KEY_PASSWORD\\\")\\n            storeFile file(\\\"baraka-release.jks\\\")\\n            storePassword System.getenv(\\\"ANDROID_KEYSTORE_PASSWORD\\\")\\n        }\\n    }\\n"
               anchor = "    buildTypes {"
               if anchor not in s:
                   raise SystemExit("Could not locate buildTypes in Groovy Gradle file")
