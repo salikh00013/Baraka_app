@@ -35,13 +35,13 @@ jobs:
               if 'id "com.android.application"' in content:
                   content = content.replace(
                       'id "com.android.application"',
-                      'id "com.android.application"\\n    id "com.google.gms.google-services" version "4.4.2"',
+                      'id "com.android.application"\n    id "com.google.gms.google-services" version "4.4.2"',
                       1,
                   )
               elif 'id("com.android.application")' in content:
                   content = content.replace(
                       'id("com.android.application")',
-                      'id("com.android.application")\\n    id("com.google.gms.google-services") version "4.4.2"',
+                      'id("com.android.application")\n    id("com.google.gms.google-services") version "4.4.2"',
                       1,
                   )
               else:
