@@ -54,7 +54,7 @@ class _GoogleLoginScreenState extends State<GoogleLoginScreen> {
       if (user != null) {
         final ref = FirebaseFirestore.instance.collection('users').doc(user.uid);
         final existing = await ref.get();
-        final data = <String, dynamic>{'uid': user.uid,'email': user.email,'displayName': user.displayName,'photoURL': user.photoUrl,'updatedAt': FieldValue.serverTimestamp()};
+        final data = <String, dynamic>{'uid': user.uid,'email': user.email,'displayName': user.displayName,'photoURL': user.photoURL,'updatedAt': FieldValue.serverTimestamp()};
         if (!existing.exists) data.addAll({'role':'customer','requestedRole':_selectedRole,'createdAt':FieldValue.serverTimestamp()});
         else if ((existing.data()?['role'] as String? ?? 'customer') != 'admin') data['requestedRole'] = _selectedRole;
         await ref.set(data, SetOptions(merge: true));
