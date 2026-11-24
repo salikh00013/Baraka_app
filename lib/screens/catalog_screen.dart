@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../models/product.dart';
+
 import '../data/initial_catalog.dart';
 import '../services/cart_store.dart';
 import 'cart_screen.dart';
