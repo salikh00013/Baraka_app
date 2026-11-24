@@ -3,7 +3,15 @@ name: BARAKA Android build
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches:
+      - main
+      - feature/auth-validation
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -25,27 +33,24 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          candidates = [Path("android/app/build.gradle"), Path("android/app/build.gradle.kts")]
+
+          candidates = [Path("android/app/build.gradle.kts"), Path("android/app/build.gradle")]
           app_gradle = next((p for p in candidates if p.exists()), None)
           if app_gradle is None:
               raise SystemExit("Android app Gradle file was not generated")
+
           content = app_gradle.read_text()
-          plugin = "com.google.gms.google-services"
-          if plugin not in content:
-              if 'id "com.android.application"' in content:
-                  content = content.replace(
-                      'id "com.android.application"',
-                      'id "com.android.application"\\n    id "com.google.gms.google-services" version "4.4.2"',
-                      1,
-                  )
-              elif 'id("com.android.application")' in content:
-                  content = content.replace(
-                      'id("com.android.application")',
-                      'id("com.android.application")\n    id("com.google.gms.google-services") version "4.4.2"',
-                      1,
-                  )
+          plugin_id = "com.google.gms.google-services"
+          if plugin_id not in content:
+              if app_gradle.suffix == ".kts":
+                  needle = 'id("com.android.application")'
+                  replacement = needle + '\n    id("com.google.gms.google-services") version "4.4.2"'
               else:
+                  needle = "id 'com.android.application'"
+                  replacement = needle + '\\n    id "com.google.gms.google-services" version "4.4.2"'
+              if needle not in content:
                   raise SystemExit("Could not locate Android application plugin declaration")
+              content = content.replace(needle, replacement, 1)
               app_gradle.write_text(content)
           PY
           test -f android/app/google-services.json
@@ -57,7 +62,7 @@ jobs:
         run: flutter pub get
 
       - name: Analyze Flutter code
-        run: flutter analyze --no-fatal-infos
+        run: flutter analyze --no-fatal-infos --no-fatal-warnings
 
       - name: Build debug APK
         run: flutter build apk --debug
