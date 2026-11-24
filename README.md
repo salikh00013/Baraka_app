@@ -24,7 +24,10 @@ BARAKA is a multi-store shopping and delivery platform launching in To‘raqo‘
 - Firebase Android configuration is stored at `android/app/google-services.json`.
 - Phone authentication is being migrated from Supabase to Firebase Authentication.
 - User profiles are stored in the Firestore `users` collection.
-- Product and admin screens are still prototypes; product price/stock persistence, cart, checkout, and order workflows are not yet complete.
+- Customer category browsing and search use a starter catalog.
+- A session-only shopping cart is implemented; quantities can be increased/decreased and the cart can be cleared.
+- Cart contents are currently in memory only and are not persisted between app restarts.
+- Product price/stock persistence, checkout, and order workflows are not yet complete.
 - Firestore security rules are provided in `firestore.rules` and must be published in the Firebase Console before production use.
 
 ## Firebase Console setup required
