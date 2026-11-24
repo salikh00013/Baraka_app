@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'home_screen.dart';
 
@@ -88,8 +89,8 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
   }
 
   Future<void> _sendCode() async {
-    if (_phone.length < 12 || !_phone.startsWith('+')) {
-      setState(() => _error = 'Telefon raqamini +998 bilan to‘liq kiriting.');
+    if (_phone.length != 13 || !_phone.startsWith('+998') || int.tryParse(_phone.substring(4)) == null) {
+      setState(() => _error = 'Telefon raqamini +998 bilan va undan keyin 9 ta raqam kiriting.');
       return;
     }
     setState(() {
@@ -222,6 +223,8 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
                   TextField(
                     controller: _phoneController, enabled: !_codeSent,
                     keyboardType: TextInputType.phone,
+                    textInputAction: TextInputAction.done,
+                    autofillHints: const [AutofillHints.telephoneNumber],
                     decoration: const InputDecoration(
                       labelText: 'Telefon raqami', hintText: '+998 90 123 45 67',
                       prefixIcon: Icon(Icons.phone), border: OutlineInputBorder()),
@@ -229,7 +232,10 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
                   if (_codeSent) ...[
                     const SizedBox(height: 12),
                     TextField(
-                      controller: _codeController, keyboardType: TextInputType.number,
+                      controller: _codeController,
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.done,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       maxLength: 6,
                       decoration: const InputDecoration(
                         labelText: 'SMS tasdiqlash kodi',
