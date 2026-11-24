@@ -16,7 +16,7 @@ BARAKA is a multi-store shopping and delivery platform launching in To‘raqo‘
 
 ## Technology
 - Flutter mobile application
-- Firebase Authentication for phone sign-in
+- Firebase Authentication for Google sign-in
 - Cloud Firestore for user, product, and order data
 - Firebase project: `baraka-013`
 
@@ -31,7 +31,7 @@ BARAKA is a multi-store shopping and delivery platform launching in To‘raqo‘
 - Firestore security rules are provided in `firestore.rules` and must be published in the Firebase Console before production use.
 
 ## Firebase Console setup required
-1. Enable **Authentication → Phone**.
+1. Enable **Authentication → Google** and add Android SHA-1/SHA-256 fingerprints, then download an updated `google-services.json` if Firebase provides one.
 2. Create a **Cloud Firestore** database.
 3. Publish the rules from `firestore.rules`.
 4. Add the Android app SHA-1/SHA-256 fingerprints in Firebase project settings if required by the app-verification flow.
