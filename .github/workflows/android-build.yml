@@ -44,7 +44,7 @@ jobs:
           if plugin_id not in content:
               if app_gradle.suffix == ".kts":
                   needle = 'id("com.android.application")'
-                  replacement = needle + '\\n    id("com.google.gms.google-services") version "4.4.2"'
+                  replacement = needle + '\n    id("com.google.gms.google-services") version "4.4.2"'
               else:
                   needle = "id 'com.android.application'"
                   replacement = needle + '\\n    id "com.google.gms.google-services" version "4.4.2"'
