@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
 
 import 'home_screen.dart';
@@ -72,8 +73,11 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
     final existing = await ref.get();
     final data = <String, dynamic>{
       'uid': user.uid,
-      'phoneNumber': user.phoneNumber ?? _phone,
       'updatedAt': FieldValue.serverTimestamp(),
+      if (user.phoneNumber != null) 'phoneNumber': user.phoneNumber,
+      if (user.email != null) 'email': user.email,
+      if (user.displayName != null) 'displayName': user.displayName,
+      if (user.photoURL != null) 'photoURL': user.photoURL,
     };
     if (!existing.exists) {
       data.addAll({
@@ -85,6 +89,31 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
       data['requestedRole'] = _selectedRole;
     }
     await ref.set(data, SetOptions(merge: true));
+  }
+
+
+  Future<void> _signInWithGoogle() async {
+    setState(() {
+      _busy = true;
+      _error = null;
+    });
+    try {
+      final googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) return;
+      final googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      final result = await FirebaseAuth.instance.signInWithCredential(credential);
+      if (result.user != null) await _saveProfile(result.user!);
+    } on FirebaseAuthException catch (e) {
+      if (mounted) setState(() => _error = _friendlyError(e));
+    } catch (e) {
+      if (mounted) setState(() => _error = 'Google orqali kirishda xatolik: $e');
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
   }
 
   Future<void> _sendCode() async {
@@ -250,6 +279,16 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
                         ? const SizedBox(height: 20, width: 20,
                             child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                         : Text(_codeSent ? 'Kodni tasdiqlash' : 'SMS kod olish'),
+                  ),
+
+                  const SizedBox(height: 10),
+                  OutlinedButton.icon(
+                    onPressed: _busy ? null : _signInWithGoogle,
+                    icon: const Icon(Icons.g_mobiledata, size: 28),
+                    label: const Text('Google orqali kirish'),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
                   ),
                   if (_codeSent)
                     TextButton(
